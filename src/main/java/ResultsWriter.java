@@ -28,7 +28,7 @@ public class ResultsWriter {
         createMethodFile();
     }
 
-    private void createClassFile(){
+    private void createClassFile() throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] columnNames = {
                 "App",
@@ -44,9 +44,10 @@ public class ResultsWriter {
         fileLines.add(columnNames);
 
         classCSVWriter.writeAll(fileLines, false);
+        classCSVWriter.flush();
     }
 
-    private void createMethodFile(){
+    private void createMethodFile() throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] columnNames = {
                 "App",
@@ -64,6 +65,7 @@ public class ResultsWriter {
         fileLines.add(columnNames);
 
         methodCSVWriter.writeAll(fileLines, false);
+        methodCSVWriter.flush();
     }
 
     public void outputToCSV(ClassEntity classEntity) throws IOException {
@@ -76,7 +78,7 @@ public class ResultsWriter {
         methodCSVWriter.close();
     }
 
-    private void outputMethodDetails(ClassEntity classEntity) {
+    private void outputMethodDetails(ClassEntity classEntity) throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] dataLine;
         for (MethodEntity methodEntity : classEntity.getMethods()) {
@@ -97,9 +99,10 @@ public class ResultsWriter {
             fileLines.add(dataLine);
         }
         methodCSVWriter.writeAll(fileLines, false);
+        methodCSVWriter.flush();
     }
 
-    private void outputClassDetails(ClassEntity classEntity){
+    private void outputClassDetails(ClassEntity classEntity) throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] dataLine;
 
@@ -117,5 +120,6 @@ public class ResultsWriter {
         fileLines.add(dataLine);
 
         classCSVWriter.writeAll(fileLines, false);
+        classCSVWriter.flush();
     }
 }

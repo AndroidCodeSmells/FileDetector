@@ -23,7 +23,7 @@ public class FileAnalyzer {
     /**
      * Constructor
      */
-    public FileAnalyzer() {
+    private FileAnalyzer() {
         initialize();
     }
 
