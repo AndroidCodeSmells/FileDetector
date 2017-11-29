@@ -3,6 +3,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import entity.ClassEntity;
 import entity.MethodEntity;
@@ -55,6 +57,7 @@ public class FileAnalyzer {
 
             classEntity.setMethods(methods);
             classEntity.setImports(imports);
+
         }
 
         return classEntity;
@@ -69,16 +72,33 @@ public class FileAnalyzer {
             super.visit(n, arg);
         }
 
+
+
         @Override
         public void visit(MethodDeclaration n, Void arg) {
             MethodEntity method = new MethodEntity(n.getNameAsString());
+
             method.setTotalStatements(n.getBody().get().getStatements().size());
             method.setParameterCount(n.getParameters().size());
             method.setReturnType(n.getType().toString());
             method.setAccessModifier(n.getModifiers().stream().map(i -> i.asString()).collect(Collectors.joining("; ")));
 
             methods.add(method);
+            super.visit(n, arg);
+        }
 
+        @Override
+        public void visit(MethodCallExpr n, Void arg) {
+            if (n.getName().asString().equals("setContentView")){
+                String layerName = n.getArgument(0).toString();
+                String [] splitLayerName = layerName.split("\\.");
+                 if (splitLayerName.length>1){
+                     classEntity.setLayoutName( splitLayerName[2]+".xml");
+                 }else {
+                     classEntity.setLayoutName( layerName);
+
+                 }
+            }
             super.visit(n, arg);
         }
 

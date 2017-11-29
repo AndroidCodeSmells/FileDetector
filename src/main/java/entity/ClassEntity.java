@@ -11,6 +11,16 @@ public class ClassEntity {
     private ArrayList<String> imports;
     private String className;
 
+    public String getLayoutName() {
+        return layoutName;
+    }
+
+    public void setLayoutName(String layoutName) {
+        this.layoutName = layoutName;
+    }
+
+    private String layoutName;
+
     public ClassEntity(Path path) {
         this.path = path;
     }
@@ -74,6 +84,7 @@ public class ClassEntity {
 
     public String getTagName() {
         String filePath = path.toAbsolutePath().toString();
+
         return filePath.split("\\\\")[4];
     }
 }

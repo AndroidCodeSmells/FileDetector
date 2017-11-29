@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ResultsWriter {
 
-    private CSVWriter classCSVWriter, methodCSVWriter;
+    private CSVWriter classCSVWriter, methodCSVWriter,xmlCSVWriter;
 
     public static ResultsWriter createResultsWriter() throws IOException {
         return new ResultsWriter();
@@ -21,13 +21,31 @@ public class ResultsWriter {
         String time = String.valueOf(Calendar.getInstance().getTimeInMillis());
         String classFileName = MessageFormat.format("{0}_{1}_{2}.{3}", "Output", "Class", time, "csv");
         String methodFileName = MessageFormat.format("{0}_{1}_{2}.{3}", "Output", "Method", time, "csv");
+        String xmlFileName = MessageFormat.format("{0}_{1}_{2}.{3}", "Output", "Xml", time, "csv");
+
         methodCSVWriter = new CSVWriter(new FileWriter(methodFileName), ',');
         classCSVWriter = new CSVWriter(new FileWriter(classFileName), ',');
+        xmlCSVWriter = new CSVWriter(new FileWriter(xmlFileName), ',');
 
         createClassFile();
         createMethodFile();
+        createXmlFile();
     }
 
+    private void createXmlFile() throws IOException {
+        List<String[]> fileLines = new ArrayList<String[]>();
+        String[] columnNames = {
+                "App",
+                "Tag",
+                "FilePath",
+                "RelativeFilePath",
+                "FileName"
+        };
+        fileLines.add(columnNames);
+
+        xmlCSVWriter.writeAll(fileLines, false);
+        xmlCSVWriter.flush();
+    }
     private void createClassFile() throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] columnNames = {
@@ -39,7 +57,7 @@ public class ResultsWriter {
                 "ClassName",
                 "TotalImports",
                 "TotalMethods",
-                "TotalMethodStatements"
+                "TotalMethodStatements","LayoutName"
         };
         fileLines.add(columnNames);
 
@@ -61,6 +79,7 @@ public class ResultsWriter {
                 "TotalParameters",
                 "ReturnType",
                 "AccessModifier"
+
         };
         fileLines.add(columnNames);
 
@@ -72,10 +91,13 @@ public class ResultsWriter {
         outputClassDetails(classEntity);
         outputMethodDetails(classEntity);
     }
-
+    public void outputXmlToCSV(ClassEntity classEntity) throws IOException {
+        outputXmlDetails(classEntity);
+    }
     public void closeOutputFiles() throws IOException {
         classCSVWriter.close();
         methodCSVWriter.close();
+
     }
 
     private void outputMethodDetails(ClassEntity classEntity) throws IOException {
@@ -102,11 +124,11 @@ public class ResultsWriter {
         methodCSVWriter.flush();
     }
 
-    private void outputClassDetails(ClassEntity classEntity) throws IOException {
+    private void  outputClassDetails(ClassEntity classEntity) throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] dataLine;
 
-        dataLine = new String[9];
+        dataLine = new String[10];
         dataLine[0] = classEntity.getAppName();
         dataLine[1] = classEntity.getTagName();
         dataLine[2] = classEntity.getFilePath();
@@ -116,10 +138,28 @@ public class ResultsWriter {
         dataLine[6] = String.valueOf(classEntity.getTotalImports());
         dataLine[7] = String.valueOf(classEntity.getTotalMethods());
         dataLine[8] = String.valueOf(classEntity.getTotalMethodStatement());
+        dataLine[9] =  classEntity.getLayoutName();
 
         fileLines.add(dataLine);
 
         classCSVWriter.writeAll(fileLines, false);
         classCSVWriter.flush();
+    }
+
+    private void  outputXmlDetails(ClassEntity classEntity) throws IOException {
+        List<String[]> fileLines = new ArrayList<String[]>();
+        String[] dataLine;
+
+        dataLine = new String[5];
+        dataLine[0] = classEntity.getAppName();
+        dataLine[1] = classEntity.getTagName();
+        dataLine[2] = classEntity.getFilePath();
+        dataLine[3] = classEntity.getRelativeFilePath();
+        dataLine[4] = classEntity.getFileName();
+
+        fileLines.add(dataLine);
+
+        xmlCSVWriter.writeAll(fileLines, false);
+        xmlCSVWriter.flush();
     }
 }
