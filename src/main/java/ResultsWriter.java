@@ -1,6 +1,7 @@
 import com.opencsv.CSVWriter;
 import entity.ClassEntity;
 import entity.MethodEntity;
+import entity.XmlEntity;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,7 +40,8 @@ public class ResultsWriter {
                 "Tag",
                 "FilePath",
                 "RelativeFilePath",
-                "FileName"
+                "FileName",
+                "className"
         };
         fileLines.add(columnNames);
 
@@ -57,7 +59,8 @@ public class ResultsWriter {
                 "ClassName",
                 "TotalImports",
                 "TotalMethods",
-                "TotalMethodStatements","LayoutName"
+                "TotalMethodStatements",
+                "PackageClassName"
         };
         fileLines.add(columnNames);
 
@@ -78,7 +81,8 @@ public class ResultsWriter {
                 "TotalStatements",
                 "TotalParameters",
                 "ReturnType",
-                "AccessModifier"
+                "AccessModifier",
+                "IsConcrete"
 
         };
         fileLines.add(columnNames);
@@ -91,8 +95,8 @@ public class ResultsWriter {
         outputClassDetails(classEntity);
         outputMethodDetails(classEntity);
     }
-    public void outputXmlToCSV(ClassEntity classEntity) throws IOException {
-        outputXmlDetails(classEntity);
+    public void outputXmlToCSV(XmlEntity xmlEntity) throws IOException {
+        outputXmlDetails(xmlEntity);
     }
     public void closeOutputFiles() throws IOException {
         classCSVWriter.close();
@@ -105,7 +109,7 @@ public class ResultsWriter {
         String[] dataLine;
         for (MethodEntity methodEntity : classEntity.getMethods()) {
 
-            dataLine = new String[11];
+            dataLine = new String[12];
             dataLine[0] = classEntity.getAppName();
             dataLine[1] = classEntity.getTagName();
             dataLine[2] = classEntity.getFilePath();
@@ -117,6 +121,7 @@ public class ResultsWriter {
             dataLine[8] = String.valueOf(methodEntity.getParameterCount());
             dataLine[9] = methodEntity.getReturnType();
             dataLine[10] = methodEntity.getAccessModifier();
+            dataLine[11] = methodEntity.getIsConcrete();
 
             fileLines.add(dataLine);
         }
@@ -138,7 +143,7 @@ public class ResultsWriter {
         dataLine[6] = String.valueOf(classEntity.getTotalImports());
         dataLine[7] = String.valueOf(classEntity.getTotalMethods());
         dataLine[8] = String.valueOf(classEntity.getTotalMethodStatement());
-        dataLine[9] =  classEntity.getLayoutName();
+        dataLine[9] = String.valueOf(classEntity.getPackageName());
 
         fileLines.add(dataLine);
 
@@ -146,16 +151,17 @@ public class ResultsWriter {
         classCSVWriter.flush();
     }
 
-    private void  outputXmlDetails(ClassEntity classEntity) throws IOException {
+    private void  outputXmlDetails(XmlEntity xmlEntity) throws IOException {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] dataLine;
 
-        dataLine = new String[5];
-        dataLine[0] = classEntity.getAppName();
-        dataLine[1] = classEntity.getTagName();
-        dataLine[2] = classEntity.getFilePath();
-        dataLine[3] = classEntity.getRelativeFilePath();
-        dataLine[4] = classEntity.getFileName();
+        dataLine = new String[6];
+        dataLine[0] = xmlEntity.getAppName();
+        dataLine[1] = xmlEntity.getTagName();
+        dataLine[2] = xmlEntity.getFilePath();
+        dataLine[3] = xmlEntity.getRelativeFilePath();
+        dataLine[4] = xmlEntity.getFileName();
+        dataLine[5] = xmlEntity.getLayoutName();
 
         fileLines.add(dataLine);
 

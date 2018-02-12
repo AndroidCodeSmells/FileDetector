@@ -67,9 +67,7 @@ public class FileWalker {
         }
 
         @Override
-        public FileVisitResult visitFile(Path file,
-                                         BasicFileAttributes attrs)
-                throws IOException {
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
             if (file.toString().toLowerCase().endsWith("."+extension)) {
                 SecondExtFiles.add(file);

@@ -11,15 +11,9 @@ public class ClassEntity {
     private ArrayList<String> imports;
     private String className;
 
-    public String getLayoutName() {
-        return layoutName;
-    }
 
-    public void setLayoutName(String layoutName) {
-        this.layoutName = layoutName;
-    }
+    private String ClassPackageName;
 
-    private String layoutName;
 
     public ClassEntity(Path path) {
         this.path = path;
@@ -60,6 +54,14 @@ public class ClassEntity {
     }
 
     public void setClassName(String className){this.className = className;}
+
+    public String getPackageName() {
+        return ClassPackageName;
+    }
+
+    public void setPackageName(String classPackageName) {
+        ClassPackageName = classPackageName;
+    }
 
     public String getFileNameWithoutExtension() {
         String fileName = path.getFileName().toString().substring(0, path.getFileName().toString().toLowerCase().lastIndexOf(".java"));

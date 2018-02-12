@@ -7,6 +7,17 @@ public class MethodEntity {
     private int parameterCount;
     private String returnType;
 
+    public String getIsConcrete() {
+        return isConcrete;
+    }
+
+    public void setIsConcrete(String isConcrete) {
+        this.isConcrete = isConcrete;
+    }
+
+    private String isConcrete;
+
+
     public MethodEntity(String methodName) {
         this.methodName = methodName;
     }

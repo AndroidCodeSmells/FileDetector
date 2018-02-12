@@ -1,10 +1,11 @@
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.type.TypeParameter;
+import com.github.javaparser.ast.comments.LineComment;
+import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import entity.ClassEntity;
 import entity.MethodEntity;
@@ -38,7 +39,7 @@ public class FileAnalyzer {
         return new FileAnalyzer();
     }
 
-    private void initialize(){
+    private void initialize() {
         methods = new ArrayList<>();
         imports = new ArrayList<>();
     }
@@ -46,19 +47,23 @@ public class FileAnalyzer {
     public ClassEntity runAnalysis(Path filePath) throws IOException {
         initialize();
 
-        CompilationUnit compilationUnit=null;
+        CompilationUnit compilationUnit = null;
 
-        if(filePath != null){
-            classEntity = new ClassEntity(filePath);
-            fileInputStream = new FileInputStream(classEntity.getFilePath());
-            compilationUnit = JavaParser.parse(fileInputStream);
-            ClassVisitor cv = new ClassVisitor();
-            cv.visit(compilationUnit,null);
+        classEntity = new ClassEntity(filePath);
 
-            classEntity.setMethods(methods);
-            classEntity.setImports(imports);
+        // disable to get the file details
+        fileInputStream = new FileInputStream(classEntity.getFilePath());
+        compilationUnit = JavaParser.parse(fileInputStream);
 
-        }
+
+        FileAnalyzer.ClassVisitor classVisitor;
+        classVisitor = new FileAnalyzer.ClassVisitor();
+
+        classVisitor.visit(compilationUnit, null);
+
+        classEntity.setMethods(methods);
+        classEntity.setImports(imports);
+
 
         return classEntity;
     }
@@ -66,47 +71,56 @@ public class FileAnalyzer {
 
     private class ClassVisitor extends VoidVisitorAdapter<Void> {
 
+
         @Override
-        public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+        public void visit(PackageDeclaration n, Void arg) {
             classEntity.setClassName(n.getNameAsString());
             super.visit(n, arg);
         }
 
+        @Override
+        public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+            classEntity.setClassName(n.getNameAsString());
+            super.visit(n, arg);
 
+
+        }
 
         @Override
         public void visit(MethodDeclaration n, Void arg) {
-            MethodEntity method = new MethodEntity(n.getNameAsString());
 
-            method.setTotalStatements(n.getBody().get().getStatements().size());
+
+            MethodEntity method = new MethodEntity(n.getNameAsString());
+            if (n.getBody().isPresent()) {
+                method.setTotalStatements(n.getBody().get().getStatements().size());
+                method.setIsConcrete("true");
+
+            }else {
+                method.setIsConcrete("false");
+            }
             method.setParameterCount(n.getParameters().size());
+
             method.setReturnType(n.getType().toString());
             method.setAccessModifier(n.getModifiers().stream().map(i -> i.asString()).collect(Collectors.joining("; ")));
 
+
             methods.add(method);
             super.visit(n, arg);
+
         }
 
-        @Override
-        public void visit(MethodCallExpr n, Void arg) {
-            if (n.getName().asString().equals("setContentView")){
-                String layerName = n.getArgument(0).toString();
-                String [] splitLayerName = layerName.split("\\.");
-                 if (splitLayerName.length>1){
-                     classEntity.setLayoutName( splitLayerName[2]+".xml");
-                 }else {
-                     classEntity.setLayoutName( layerName);
 
-                 }
-            }
-            super.visit(n, arg);
-        }
+
 
         @Override
         public void visit(ImportDeclaration n, Void arg) {
+
             imports.add(n.getNameAsString());
 
             super.visit(n, arg);
+
+
         }
     }
 }
+
