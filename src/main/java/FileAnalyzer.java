@@ -74,7 +74,7 @@ public class FileAnalyzer {
 
         @Override
         public void visit(PackageDeclaration n, Void arg) {
-            classEntity.setClassName(n.getNameAsString());
+            classEntity.setPackageName(n.getNameAsString());
             super.visit(n, arg);
         }
 
@@ -108,8 +108,6 @@ public class FileAnalyzer {
             super.visit(n, arg);
 
         }
-
-
 
 
         @Override
