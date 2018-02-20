@@ -41,7 +41,9 @@ public class ResultsWriter {
                 "FilePath",
                 "RelativeFilePath",
                 "FileName",
-                "className"
+                "className",
+                "PackageName"
+
         };
         fileLines.add(columnNames);
 
@@ -155,13 +157,14 @@ public class ResultsWriter {
         List<String[]> fileLines = new ArrayList<String[]>();
         String[] dataLine;
 
-        dataLine = new String[6];
+        dataLine = new String[7];
         dataLine[0] = xmlEntity.getAppName();
         dataLine[1] = xmlEntity.getTagName();
         dataLine[2] = xmlEntity.getFilePath();
         dataLine[3] = xmlEntity.getRelativeFilePath();
         dataLine[4] = xmlEntity.getFileName();
         dataLine[5] = xmlEntity.getLayoutName();
+        dataLine[6] = xmlEntity.getPackageName();
 
         fileLines.add(dataLine);
 
