@@ -80,8 +80,12 @@ public class FileAnalyzer {
 
         @Override
         public void visit(ClassOrInterfaceDeclaration n, Void arg) {
-            classEntity.setClassName(n.getNameAsString());
-            super.visit(n, arg);
+
+            if (!n.isInterface()){
+                classEntity.setClassName(n.getNameAsString());
+                super.visit(n, arg);
+            }
+
 
 
         }
