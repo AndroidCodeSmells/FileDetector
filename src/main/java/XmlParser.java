@@ -18,21 +18,17 @@ public class XmlParser {
 
     List<Node> elements;
 
-    public XmlParser(String filePath) {
+    public  XmlParser(String filePath) throws DocumentException {
 
 
         isWordList = false;
 
         SAXReader reader = new SAXReader();
-        try {
-            document = reader.read(filePath);
 
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
+
+        document = reader.read(filePath);
 
         Element rootElement = document.getRootElement();
-
 
         elements = document.selectNodes(rootElement.getName());
 

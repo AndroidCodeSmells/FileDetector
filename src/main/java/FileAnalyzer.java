@@ -83,8 +83,12 @@ public class FileAnalyzer {
 
             if (!n.isInterface()){
                 classEntity.setClassName(n.getNameAsString());
-                super.visit(n, arg);
+            }else {
+                classEntity.setClassName(n.getNameAsString());
+
             }
+
+            super.visit(n, arg);
 
 
 

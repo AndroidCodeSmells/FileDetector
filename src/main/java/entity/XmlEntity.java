@@ -20,26 +20,13 @@ public class XmlEntity extends ClassEntity{
 
             this.setPackageName(packageName);
 
-        }else {
-            this.setPackageName("null");
-
         }
-
         this.layoutName = className;
     }
     public String getLayoutName() {
         return layoutName;
     }
 
-    @Override
-    public String getPackageName() {
 
-        return layoutName;
-    }
 
-//    private String[] spilteString(String layoutName){
-//
-//        return ["",""];
-//
-//        }
 }
