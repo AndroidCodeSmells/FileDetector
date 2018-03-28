@@ -73,7 +73,7 @@ public class ClassEntity {
         String filePath = path.toAbsolutePath().toString();
         String[] splitString = filePath.split("\\\\");
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             stringBuilder.append(splitString[i] + "\\");
         }
         return filePath.substring(stringBuilder.toString().length()).replace("\\", "/");
@@ -81,12 +81,12 @@ public class ClassEntity {
 
     public String getAppName() {
         String filePath = path.toAbsolutePath().toString();
-        return filePath.split("\\\\")[3];
+        return filePath.split("\\\\")[2];
     }
 
     public String getTagName() {
         String filePath = path.toAbsolutePath().toString();
 
-        return filePath.split("\\\\")[4];
+        return filePath.split("\\\\")[3];
     }
 }

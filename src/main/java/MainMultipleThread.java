@@ -25,75 +25,55 @@ public class MainMultipleThread {
 //        System.out.println(files.get(0).size());
 
 
-        Thread t = new Thread() {
-            @Override
-            public void run() {  // override the run() to specify the running behavior
+        File[] dictList = Main.getDirectoriesList();
 
-                Process p = null;
-                try {
-                    p = Runtime.getRuntime().exec("java -jar  C:\\Users\\khalid\\Documents\\GitHub\\FileDetector\\classes\\artifacts\\FileDetector_jar\\FileDetector.jar 0 662");
-                    BufferedReader is = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String line;
+        int len = dictList.length;
+        int diffByFive = len /4;
 
-                    while ((line = is.readLine()) != null)
-                        System.out.println("p "+line);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        int starRange = 0;
+        int endRange = diffByFive;
+        for (int i = 0; i <4; i++) {
 
 
+            System.out.println("run process start"+starRange+" end "+endRange);
 
+            runFileDetector( String.valueOf(starRange), String.valueOf(endRange));
+
+            Thread.sleep(400);
+
+            starRange = endRange+1;
+            endRange = endRange+diffByFive;
+
+
+        }
+
+
+
+
+
+    }
+
+    private static void runFileDetector(String start, String end) {
+        String jarURl = "E:\\Khalid\\GitHub\\FileDetector\\classes\\artifacts\\FileDetector_jar\\FileDetector.jar";
+        Thread t = new Thread(() -> {  // override the run() to specify the running behavior
+
+            Process p = null;
+            try {
+                p = Runtime.getRuntime().exec("java -jar "+jarURl+" "+start+" "+end+"");
+                BufferedReader is = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line;
+
+                while ((line = is.readLine()) != null)
+                    System.out.println("Process  "+start+"  end "+end+" output  ");
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        };
+
+
+
+        });
         t.start();  // call back run()
-
-
-        Thread t1 = new Thread() {
-            @Override
-            public void run() {  // override the run() to specify the running behavior
-                try {
-                    Process p1 = Runtime.getRuntime().exec("java -jar  C:\\Users\\khalid\\Documents\\GitHub\\FileDetector\\classes\\artifacts\\FileDetector_jar\\FileDetector.jar 663 1324");
-                    BufferedReader is1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
-                    String line1;
-
-                    while ((line1 = is1.readLine()) != null)
-                        System.out.println("p1  "+line1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        };
-        t1.start();  // call back run()
-
-        Thread t2 = new Thread() {
-            @Override
-            public void run() {  // override the run() to specify the running behavior
-
-                try {
-                    Process p2 = Runtime.getRuntime().exec("java -jar  C:\\Users\\khalid\\Documents\\GitHub\\FileDetector\\classes\\artifacts\\FileDetector_jar\\FileDetector.jar 1325 1986");
-                    BufferedReader is2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-                    String line2;
-
-                    while ((line2 = is2.readLine()) != null)
-                        System.out.println("p2 "+line2);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        };
-        t2.start();  // call back run()
-
-
-
-
-
-
-
     }
 
 
